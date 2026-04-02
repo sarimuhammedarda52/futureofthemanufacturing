@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOT-M | Üretimin Geleceği</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #030303;
+            --bg-secondary: #0a0a0a;
+            --surface-color: #111111;
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+            --border-color: #27272a;
+            --accent: #ffffff;
+            --accent-dim: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .bg-glow {
+            position: absolute;
+            top: -10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0) 60%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 25px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(3, 3, 3, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 5%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-container img {
+            height: 150px; 
+            width: auto;
+            border-radius: 4px;
+            transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        nav.scrolled .logo-container img {
+            height: 90px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links .join-btn-nav {
+            background-color: var(--accent);
+            color: var(--bg-color);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-weight: 600;
+        }
+        
+        .nav-links .join-btn-nav:hover {
+            background-color: #e0e0e0;
+            color: var(--bg-color);
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+            margin-left: 10px;
+            border-left: 1px solid var(--border-color);
+            padding-left: 20px;
+        }
+
+        .nav-icons a svg {
+            width: 20px;
+            height: 20px;
+            transition: stroke 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.2s;
+        }
+
+        .hero .slogan {
+            font-size: clamp(1.4rem, 2.5vw, 2rem);
+            color: var(--accent);
+            font-weight: 400;
+            margin-bottom: 30px;
+            letter-spacing: 0.01em;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.4s;
+        }
+
+        .hero .desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            margin-bottom: 40px;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.5s;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.6s;
+        }
+
+        .btn {
+            padding: 16px 36px;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--bg-color);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--accent);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background-color: var(--accent-dim);
+        }
+
+        /* Section Layouts */
+        .section-wrapper {
+            padding: 120px 5%;
+        }
+
+        .bg-darker {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* Biz Kimiz / Hakkımızda */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .mission-box {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        .mission-box:hover {
+            border-color: #444;
+        }
+
+        .mission-box h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        
+        .mission-box p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Çalışma Alanları Grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px 30px;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, #333, #666);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card:hover {
+            border-color: #555;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        /* Blog / Güncel */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .blog-card {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .blog-card:hover {
+            border-color: #555;
+        }
+
+        .blog-img {
+            height: 200px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        .blog-img::after {
+            content: 'FOT-M MEDIA';
+            color: #333;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+        }
+
+        .blog-content {
+            padding: 30px;
+        }
+
+        .blog-tag {
+            font-size: 0.75rem;
+            background: var(--surface-color);
+            padding: 4px 10px;
+            border-radius: 100px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: inline-block;
+            border: 1px solid var(--border-color);
+        }
+
+        .blog-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .blog-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .read-more {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 5%;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .footer-logo {
+            height: 180px; 
+            margin-top: 80px;
+            object-fit: contain;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 25px;
+        }
+
+        .social-icons a {
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: var(--accent);
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; 
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero .slogan {
+                font-size: 1.2rem;
+            }
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+            .logo-container img {
+                height: 90px;
+            }
+            nav {
+                padding: 15px 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <nav id="navbar">
+        <div class="logo-container">
+            <img src="logo/fotmresim.png" alt="FOT-M Logo">
+        </div>
+        <div class="nav-links">
+            <a href="#hero">Ana Sayfa</a>
+            <a href="#hakkimizda">Biz Kimiz?</a>
+            <a href="#arge">Çalışma Alanları</a>
+            <a href="#blog">Blog</a>
+            
+            <div class="nav-icons">
+                <a href="https://www.instagram.com/fotmresmi/" target="_blank" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                </a>
+                <a href="https://www.linkedin.com/company/fotm-subu" target="_blank" aria-label="LinkedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                </a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=futureofthemanufacturing@gmail.com" target="_blank" aria-label="E-posta">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </a>
+            </div>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf7tYTZ3Wy6WZc64zi3DsCpmwAchU1Be7CKoMNG221JLivJig/viewform?usp=dialog" target="_blank" class="join-btn-nav">Ekibe Katıl</a>
+        </div>
+    </nav>
+
+    <section id="hero" class="hero">
+        <h1>FUTURE OF THE MANUFACTURING</h1>
+        <p class="slogan">Üretimin Geleceği Bizim Elimizde</p>
+        <p class="desc">Sakarya Uygulamalı Bilimler Üniversitesi bünyesinde teorik bilgileri pratiğe döken, endüstri 4.0 ve otomasyon sistemleri geliştiren üretim ekosistemi.</p>
+        
+        <div class="hero-buttons">
+            <a href="#hakkimizda" class="btn btn-primary">BİZİ TANIYIN</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf7tYTZ3Wy6WZc64zi3DsCpmwAchU1Be7CKoMNG221JLivJig/viewform?usp=dialog" target="_blank" class="btn btn-secondary">TOPLULUĞA KATIL</a>
+        </div>
+    </section>
+
+    <section id="hakkimizda" class="section-wrapper bg-darker">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text fade-in">
+                    <h2 class="section-title">HAKKIMIZDA</h2>
+                    <h3 class="section-heading" style="margin-bottom: 20px;">Biz Kimiz?</h3>
+                    <p>Üniversitemizde teorik bilgileri pratiğe döken, uygulamalı bilimlere inanan bir proje takımıyız.</p>
+                    <p>Kariyer Günleri'nde elinde sadece bir özgeçmişle değil, FOT-M çatısı altında geliştirdiğin somut projelerin, çalışan prototiplerin ve teknik sunum becerilerinle yer alarak, diğer adayların her zaman bir adım önüne geçecek ve dikkatleri üzerine çekeceksin.</p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf7tYTZ3Wy6WZc64zi3DsCpmwAchU1Be7CKoMNG221JLivJig/viewform?usp=dialog" target="_blank" class="btn btn-primary" style="display: inline-block; margin-top: 20px;">Aramıza Katıl</a>
+                </div>
+                
+                <div class="about-missions fade-in">
+                    <div class="mission-box">
+                        <h4>Temel Amacımız</h4>
+                        <p>Öğrencilerimizin üretim teknolojileri, Endüstri 4.0 ve otomasyon sistemleri konularında akademik ve sosyal gelişimlerini sağlamak.</p>
+                    </div>
+                    <div class="mission-box">
+                        <h4>Hedefimiz</h4>
+                        <p>TEKNOFEST ve TÜBİTAK gibi yarışmalara "FOT-M" proje takımlarıyla katılım sağlamak.</p>
+                    </div>
+                    <div class="mission-box">
+                        <h4>Misyonumuz</h4>
+                        <p>Sektör temsilcileri ile öğrencileri bir araya getirerek üniversitemizde üretim kültürünü yaygınlaştırmak.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="arge" class="section-wrapper">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">FAALİYETLERİMİZ</h2>
+                <h3 class="section-heading">FOT-M'in Çalışma Alanları</h3>
+            </div>
+            
+            <div class="grid-container">
+                <div class="card fade-in">
+                    <h3>Ar-Ge ve Prototip</h3>
+                    <p>Takımlar bünyesinde imalat sistemleri, IIoT ve yapay zeka destekli prototipler geliştirmek.</p>
+                </div>
+                <div class="card fade-in">
+                    <h3>Fiziksel Üretim</h3>
+                    <p>3D yazıcıları, CNC makinelerini ve basit robotları kullanarak projeleri gerçeğe dönüştürüyoruz.</p>
+                </div>
+                <div class="card fade-in">
+                    <h3>Otomasyon ve Kodlama</h3>
+                    <p>Makinelerin dili: Kodlama! Üretim hatlarını nasıl otomatikleştiririz? Hangi programlama dillerini kullanırız?</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <img src="logo/altlogoresim.png" alt="SUBÜ ve FOT-M Logo" class="footer-logo">
+        <div class="social-icons">
+            <a href="https://www.instagram.com/fotmresmi/" target="_blank" aria-label="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="44" height="44" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+            <a href="https://www.linkedin.com/company/fotm-subu" target="_blank" aria-label="LinkedIn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+            </a>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=futureofthemanufacturing@gmail.com" target="_blank" aria-label="E-posta">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </a>
+        </div>
+        <p>&copy; 2026 FOT-M (Future of the Manufacturing). Tüm hakları saklıdır.<br>
+        Sakarya Uygulamalı Bilimler Üniversitesi Üretimin Geleceği Öğrenci Topluluğu</p>
+    </footer>
+
+    <script>
+        // Navbar Animasyonu
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll Elementlerini Yakalama
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>
