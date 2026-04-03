@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>FOT-M | Yönetim Paneli</title>
+    <style>
+        body { background: #050505; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px 20px; }
+        .panel { background: #111; padding: 30px; border-radius: 12px; border: 1px solid #333; width: 100%; max-width: 500px; margin-bottom: 40px; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #444; color: white; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #fff; color: #000; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #ccc; }
+        
+        .liste { width: 100%; max-width: 500px; }
+        .haber-item { background: #111; border: 1px solid #222; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .sil-btn { width: auto; padding: 8px 15px; background: #ff4444; color: white; font-size: 12px; }
+        .sil-btn:hover { background: #cc0000; }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <h2>FOT-M Yeni Duyuru</h2>
+        <input type="text" id="etiket" placeholder="Etiket">
+        <input type="text" id="baslik" placeholder="Başlık">
+        <textarea id="metin" rows="3" placeholder="Metin"></textarea>
+        <input type="text" id="gorsel" placeholder="Görsel URL">
+        <button onclick="duyuruGonder()">YAYINLA</button>
+    </div>
+
+    <div class="liste" id="duyuruListesi">
+        <h3>Yayındaki Duyurular</h3>
+        </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:5000/api';
+
+        // Sayfa açıldığında mevcut duyuruları çek
+        window.onload = duyurulariYukle;
+
+        function duyurulariYukle() {
+            fetch(`${API_URL}/duyurular`)
+                .then(res => res.json())
+                .then(data => {
+                    const listeDiv = document.getElementById('duyuruListesi');
+                    listeDiv.innerHTML = '<h3>Yayındaki Duyurular</h3>';
+                    data.forEach(d => {
+                        listeDiv.innerHTML += `
+                            <div class="haber-item">
+                                <div><strong>${d.baslik}</strong><br><small>${d.etiket}</small></div>
+                                <button class="sil-btn" onclick="duyuruSil(${d.id})">SİL</button>
+                            </div>
+                        `;
+                    });
+                });
+        }
+
+        function duyuruGonder() {
+            const data = {
+                etiket: document.getElementById('etiket').value,
+                baslik: document.getElementById('baslik').value,
+                metin: document.getElementById('metin').value,
+                gorsel: document.getElementById('gorsel').value
+            };
+
+            fetch(`${API_URL}/duyuru-ekle`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(() => { duyurulariYukle(); window.location.reload(); });
+        }
+
+        function duyuruSil(id) {
+            if(confirm('Bu duyuruyu silmek istediğine emin misin aslanım?')) {
+                fetch(`${API_URL}/duyuru-sil/${id}`, { method: 'DELETE' })
+                .then(() => duyurulariYukle());
+            }
+        }
+    </script>
+</body>
+</html>
