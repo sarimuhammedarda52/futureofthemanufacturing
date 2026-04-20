@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>FOT-M | Yönetim Paneli</title>
     <script>
+        // Şifre Koruması
         const giris = prompt("Yönetici Şifresi:");
         if(giris !== "FOTM2026") {
             document.write("<body style='background:#050505; color:white; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;'><h2>Erişim Engellendi</h2></body>");
@@ -11,35 +12,39 @@
         }
     </script>
     <style>
-        body { background: #050505; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; }
-        .sidebar { width: 380px; background: #111; padding: 40px; border-right: 1px solid #222; overflow-y: auto; }
-        h2 { font-size: 22px; margin-bottom: 20px; letter-spacing: 1px; }
-        label { font-size: 12px; color: #a1a1aa; display: block; margin-bottom: 5px; text-transform: uppercase; }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 20px; background: #0a0a0a; border: 1px solid #333; color: white; border-radius: 6px; box-sizing: border-box; }
-        .btn-submit { width: 100%; padding: 15px; background: #fff; color: #000; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-submit:hover { background: #ccc; }
-        .content { flex: 1; padding: 40px; background: #0a0a0a; overflow-y: auto; }
-        .haber-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .haber-card { background: #111; border: 1px solid #222; border-radius: 8px; padding: 15px; position: relative; }
-        .btn-delete { background: #4a0000; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; }
+        body { background: #050505; color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; height: 100vh; }
+        .sidebar { width: 400px; background: #111; padding: 40px; border-right: 1px solid #222; display: flex; flex-direction: column; overflow-y: auto; }
+        h2 { margin-top: 0; font-size: 24px; letter-spacing: 1px; margin-bottom: 5px; }
+        .status-text { color: #a1a1aa; font-size: 13px; margin-bottom: 30px; display: block; }
+        label { font-size: 13px; color: #a1a1aa; margin-bottom: 5px; display: block; text-transform: uppercase; }
+        input[type="text"], textarea { width: 100%; padding: 12px; margin-bottom: 20px; background: #0a0a0a; border: 1px solid #333; color: white; border-radius: 6px; box-sizing: border-box; }
+        input[type="file"] { width: 100%; padding: 10px; margin-bottom: 30px; background: #0a0a0a; border: 1px dashed #444; color: #a1a1aa; border-radius: 6px; cursor: pointer; }
+        button.btn-submit { width: 100%; padding: 15px; background: #fff; color: #000; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button.btn-submit:hover { background: #ccc; }
+        .content { flex: 1; padding: 40px; overflow-y: auto; background: #0a0a0a; }
+        .haber-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .haber-card { background: #111; border: 1px solid #222; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; }
+        .gorsel-onizleme { width: 100%; height: 120px; background-size: cover; background-position: center; border-radius: 4px; margin-bottom: 15px; background-color: #050505; }
+        .btn-delete { width: 100%; margin-top: 15px; padding: 8px; background: #4a0000; color: #fff; border: 1px solid #6a0000; border-radius: 4px; cursor: pointer; font-size: 12px; }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h2>FOT-M Panel</h2>
+        <h2>Medya Ekle</h2>
+        <span class="status-text">FOT-M Duyuru ve Haber Sistemi</span>
         <label>Kategori</label>
         <input type="text" id="etiket" placeholder="Örn: Duyuru, Ar-Ge">
-        <label>Haber Başlığı</label>
+        <label>Başlık</label>
         <input type="text" id="baslik" required>
-        <label>İçerik Metni</label>
-        <textarea id="metin" rows="6" required></textarea>
-        <label>Görsel</label>
+        <label>İçerik</label>
+        <textarea id="metin" rows="5" required></textarea>
+        <label>Görsel Seç</label>
         <input type="file" id="gorsel" accept="image/*">
         <button class="btn-submit" id="saveBtn" onclick="yayinla()">YAYINLA</button>
     </div>
     <div class="content">
         <h3>Yayındaki İçerikler</h3>
-        <div class="haber-grid" id="liste"></div>
+        <div class="haber-grid" id="duyuruListesi"></div>
     </div>
 
     <script>
@@ -52,7 +57,7 @@
 
         async function yayinla() {
             const btn = document.getElementById('saveBtn');
-            btn.innerText = "YÜKLENİYOR...";
+            btn.innerText = "İŞLENİYOR...";
             btn.disabled = true;
 
             const file = document.getElementById('gorsel').files[0];
@@ -70,27 +75,28 @@
             };
 
             await fetch(S_URL, { method: 'POST', headers, body: JSON.stringify(veri) });
-            alert("Başarıyla eklendi!");
+            alert("Haber başarıyla tüm sistemlerde yayınlandı!");
             location.reload();
         }
 
         async function listele() {
             const res = await fetch(`${S_URL}?select=*&order=id.desc`, { headers });
             const data = await res.json();
-            const div = document.getElementById('liste');
-            div.innerHTML = data.length ? '' : '<p style="color:#444;">Duyuru yok.</p>';
+            const liste = document.getElementById('duyuruListesi');
+            liste.innerHTML = data.length ? '' : '<p style="color:#444;">Henüz bir haber bulunmuyor.</p>';
             data.forEach(d => {
-                div.innerHTML += `<div class="haber-card">
-                    ${d.gorsel ? `<img src="${d.gorsel}" style="width:100%; border-radius:4px; margin-bottom:10px;">` : ''}
-                    <small style="color:#666;">${d.etiket}</small>
-                    <h4 style="margin:5px 0;">${d.baslik}</h4>
-                    <button class="btn-delete" onclick="sil(${d.id})">SİL</button>
-                </div>`;
+                liste.innerHTML += `
+                    <div class="haber-card">
+                        ${d.gorsel ? `<div class="gorsel-onizleme" style="background-image: url('${d.gorsel}')"></div>` : ''}
+                        <span style="font-size:11px; color:#666; background:#222; padding:3px 8px; border-radius:4px; display:inline-block;">${d.etiket}</span>
+                        <h4 style="margin:10px 0;">${d.baslik}</h4>
+                        <button class="btn-delete" onclick="sil(${d.id})">SİL</button>
+                    </div>`;
             });
         }
 
         async function sil(id) {
-            if(confirm("Silinsin mi?")) {
+            if(confirm("Bu haberi kalıcı olarak silmek istediğine emin misin?")) {
                 await fetch(`${S_URL}?id=eq.${id}`, { method: 'DELETE', headers });
                 listele();
             }
