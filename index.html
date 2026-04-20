@@ -4,109 +4,684 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FOT-M | Üretimin Geleceği</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
     <style>
-        /* Senin orijinal CSS kodların burada kalacak (Root tanımları, Hero, Navbar vb.) */
-        :root { --bg-color: #030303; --bg-secondary: #0a0a0a; --surface-color: #111111; --text-main: #ffffff; --text-muted: #a1a1aa; --border-color: #27272a; --accent: #ffffff; --accent-dim: rgba(255, 255, 255, 0.1); }
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-        body { background-color: var(--bg-color); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; line-height: 1.6; }
-        
-        /* Navbar ve Layout Stilleri */
-        nav { position: fixed; top: 0; width: 100%; padding: 25px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; transition: 0.4s; }
-        nav.scrolled { background: rgba(3, 3, 3, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-color); padding: 15px 5%; }
-        .logo-container img { height: 120px; transition: 0.4s; }
-        nav.scrolled .logo-container img { height: 75px; }
-        .nav-links { display: flex; gap: 30px; align-items: center; }
-        .nav-links a.text-link { color: var(--text-muted); text-decoration: none; font-size: 14px; }
-        
-        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 20px; }
-        .hero h1 { font-size: clamp(2.5rem, 6vw, 5.5rem); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 10px; }
-        .hero .slogan { font-size: clamp(1.2rem, 2.5vw, 2rem); color: var(--accent); margin-bottom: 30px; }
-        .hero .desc { font-size: 1.1rem; color: var(--text-muted); max-width: 650px; margin-bottom: 40px; font-weight: 300; }
+        :root {
+            --bg-color: #030303;
+            --bg-secondary: #0a0a0a;
+            --surface-color: #111111;
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+            --border-color: #27272a;
+            --accent: #ffffff;
+            --accent-dim: rgba(255, 255, 255, 0.1);
+        }
 
-        /* Blog Tasarımın */
-        .section-wrapper { padding: 120px 5%; }
-        .bg-darker { background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); }
-        .section-heading { font-size: 2.5rem; font-weight: 700; text-align: center; margin-bottom: 60px; }
-        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .blog-card { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: 0.3s; }
-        .blog-card:hover { border-color: #555; }
-        .blog-img { height: 220px; background-size: cover; background-position: center; background-color: #1a1a1a; }
-        .blog-content { padding: 30px; }
-        .blog-tag { font-size: 0.75rem; background: var(--surface-color); padding: 4px 12px; border-radius: 100px; color: var(--text-muted); border: 1px solid var(--border-color); margin-bottom: 15px; display: inline-block; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .bg-glow {
+            position: absolute;
+            top: -10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0) 60%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 25px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(3, 3, 3, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 5%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-container img {
+            height: 150px; 
+            width: auto;
+            border-radius: 4px;
+            transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
         
-        footer { padding: 60px 5%; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border-color); }
-        .footer-logo { height: 80px; margin-bottom: 20px; }
+        nav.scrolled .logo-container img {
+            height: 90px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links > a.text-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links > a.text-link:hover {
+            color: var(--accent);
+        }
+
+        .nav-links .join-btn-nav {
+            background-color: var(--accent);
+            color: var(--bg-color);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .nav-links .join-btn-nav:hover {
+            background-color: #e0e0e0;
+            color: var(--bg-color);
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+            margin-left: 10px;
+            border-left: 1px solid var(--border-color);
+            padding-left: 20px;
+            align-items: center;
+        }
+
+        .nav-icons a {
+            color: var(--text-muted);
+        }
+
+        .nav-icons a:hover {
+            color: var(--accent);
+        }
+
+        .nav-icons a svg {
+            width: 20px;
+            height: 20px;
+            transition: stroke 0.3s;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px 60px 20px; 
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.2s;
+        }
+
+        .hero .slogan {
+            font-size: clamp(1.4rem, 2.5vw, 2rem);
+            color: var(--accent);
+            font-weight: 400;
+            margin-bottom: 30px;
+            letter-spacing: 0.01em;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.4s;
+        }
+
+        .hero .desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            margin-bottom: 40px;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.5s;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.6s;
+        }
+
+        .btn {
+            padding: 16px 36px;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--bg-color);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--accent);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background-color: var(--accent-dim);
+        }
+
+        .section-wrapper {
+            padding: 120px 5%;
+        }
+
+        .bg-darker {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .mission-box {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        .mission-box:hover {
+            border-color: #444;
+        }
+
+        .mission-box h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        
+        .mission-box p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px 30px;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, #333, #666);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card:hover {
+            border-color: #555;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .blog-card {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .blog-card:hover {
+            border-color: #555;
+        }
+
+        .blog-img {
+            height: 200px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        .blog-img::after {
+            content: '';
+            color: #333;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+        }
+
+        .blog-content {
+            padding: 30px;
+        }
+
+        .blog-tag {
+            font-size: 0.75rem;
+            background: var(--surface-color);
+            padding: 4px 10px;
+            border-radius: 100px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: inline-block;
+            border: 1px solid var(--border-color);
+        }
+
+        .blog-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .blog-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        footer {
+            padding: 60px 5%;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .footer-logo {
+            height: 80px; 
+            object-fit: contain;
+            margin-top: 40px; 
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 25px;
+        }
+
+        .social-icons a {
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: var(--accent);
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .nav-links > a.text-link {
+                display: none; 
+            }
+            .nav-icons {
+                border-left: none;
+                padding-left: 0;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero .slogan {
+                font-size: 1.2rem;
+            }
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+            .logo-container img {
+                height: 70px;
+            }
+            nav.scrolled .logo-container img {
+                height: 60px;
+            }
+            nav {
+                padding: 15px 5%;
+            }
+            .join-btn-nav {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <div class="bg-glow"></div>
+
     <nav id="navbar">
-        <div class="logo-container"><img src="logo/fotmresim.png" alt="Logo"></div>
+        <div class="logo-container">
+            <img src="logo/fotmresim.png" alt="FOT-M Logo">
+        </div>
         <div class="nav-links">
             <a href="#hero" class="text-link">Ana Sayfa</a>
-            <a href="#blog" class="text-link">Haberler</a>
-            <a href="https://docs.google.com/forms/..." target="_blank" style="background:white; color:black; padding:8px 16px; border-radius:100px; text-decoration:none; font-weight:600; font-size:14px;">Ekibe Katıl</a>
+            <a href="#hakkimizda" class="text-link">Biz Kimiz?</a>
+            <a href="#arge" class="text-link">Çalışma Alanları</a>
+            
+            <div class="nav-icons">
+                <a href="https://www.instagram.com/fotmresmi/" target="_blank" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                </a>
+                <a href="https://www.linkedin.com/company/fotm-subu" target="_blank" aria-label="LinkedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                </a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=futureofthemanufacturing@gmail.com" target="_blank" aria-label="E-posta">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </a>
+            </div>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf7tYTZ3Wy6WZc64zi3DsCpmwAchU1Be7CKoMNG221JLivJig/viewform?usp=dialog" target="_blank" class="join-btn-nav">Ekibe Katıl</a>
         </div>
     </nav>
 
     <section id="hero" class="hero">
         <h1>FUTURE OF THE MANUFACTURING</h1>
         <p class="slogan">Üretimin Geleceği Bizim Elimizde</p>
-        <p class="desc">Sakarya Uygulamalı Bilimler Üniversitesi bünyesinde teoriyi pratiğe dönüştüren; Endüstri 4.0 ve Akıllı Üretim sistemleri geliştiren Türkiye'nin ilk öğrenci topluluğuyuz.</p>
-        <a href="#blog" style="background:white; color:black; padding:16px 36px; border-radius:100px; text-decoration:none; font-weight:600;">SON DUYURULAR</a>
+        <p class="desc">Sakarya Uygulamalı Bilimler Üniversitesi bünyesinde teorik bilgileri pratiğe döken, endüstri 4.0 ve otomasyon sistemleri geliştiren teknoloji ve proje takımıdır.</p>
+        
+        <div class="hero-buttons">
+            <a href="#hakkimizda" class="btn btn-primary">BİZİ TANIYIN</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf7tYTZ3Wy6WZc64zi3DsCpmwAchU1Be7CKoMNG221JLivJig/viewform?usp=dialog" target="_blank" class="btn btn-secondary">TOPLULUĞA KATIL</a>
+        </div>
     </section>
 
-    <section id="blog" class="section-wrapper bg-darker" style="display:none;">
+    <section id="hakkimizda" class="section-wrapper bg-darker">
         <div class="container">
-            <h3 class="section-heading">Güncel & Medya</h3>
-            <div class="blog-grid" id="blogGrid"></div>
+            <div class="about-grid">
+                <div class="about-text fade-in">
+                    <h2 class="section-title">HAKKIMIZDA</h2>
+                    <h3 class="section-heading" style="margin-bottom: 20px;">Biz Kimiz?</h3>
+                    <p>Kağıt üzerindeki formülleri üretim hattına, teorik fikirleri çalışan sistemlere dönüştüren dinamik bir teknoloji takımıyız.</p>
+                    <p>Kariyer basamaklarını boş bir CV ile değil; FOT-M'de yazdığınız kodlar, ürettiğiniz cihazlar ve edindiğiniz gerçek sanayi deneyimiyle tırmanacaksınız. Sektör temsilcilerinin karşısına çıktığınızda, masaya koyduğunuz somut projeler ve teknik vizyonunuzla diğer tüm adayların her zaman bir adım önünde olacaksınız.</p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf7tYTZ3Wy6WZc64zi3DsCpmwAchU1Be7CKoMNG221JLivJig/viewform?usp=dialog" target="_blank" class="btn btn-primary" style="display: inline-block; margin-top: 20px;">Aramıza Katıl</a>
+                </div>
+                
+                <div class="about-missions fade-in">
+                    <div class="mission-box">
+                        <h4>Temel Amacımız</h4>
+                        <p>Öğrencilerimizin üretim teknolojileri, Endüstri 4.0 ve otomasyon sistemleri konularında akademik ve sosyal gelişimlerini sağlamak.</p>
+                    </div>
+                    <div class="mission-box">
+                        <h4>Hedefimiz</h4>
+                        <p>TEKNOFEST ve TÜBİTAK gibi yarışmalara "FOT-M" proje takımlarıyla katılım sağlamak.</p>
+                    </div>
+                    <div class="mission-box">
+                        <h4>Misyonumuz</h4>
+                        <p>Sektör temsilcileri ile öğrencileri bir araya getirerek üniversitemizde üretim kültürünü yaygınlaştırmak.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="arge" class="section-wrapper">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">FAALİYETLERİMİZ</h2>
+                <h3 class="section-heading">FOT-M'in Çalışma Alanları</h3>
+            </div>
+            
+            <div class="grid-container">
+                <div class="card fade-in">
+                    <h3>Ar-Ge ve Prototip</h3>
+                    <p>Takımlar bünyesinde imalat sistemleri, IIoT (Nesnelerin İnterneti) ve yapay zeka destekli prototipler geliştirmek.</p>
+                </div>
+                <div class="card fade-in">
+                    <h3>Fiziksel Üretim</h3>
+                    <p>3D yazıcıları, CNC makinelerini ve basit robotları kullanarak projeleri gerçeğe dönüştürüyoruz.</p>
+                </div>
+                <div class="card fade-in">
+                    <h3>Otomasyon ve Kodlama</h3>
+                    <p>Makinelerin dili: Kodlama! Üretim hatlarını nasıl otomatikleştiririz? Hangi programlama dillerini kullanırız?</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog" class="section-wrapper bg-darker">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">GÜNCEL & MEDYA</h2>
+                <h3 class="section-heading">Son Gelişmeler ve Blog</h3>
+            </div>
+            
+            <div class="blog-grid">
+                </div>
         </div>
     </section>
 
     <footer>
-        <img src="logo/altlogoresim.png" alt="Logo" class="footer-logo">
-        <p>&copy; 2026 FOT-M | Future of the Manufacturing</p>
+        <img src="logo/altlogoresim.png" alt="SUBÜ ve FOT-M Logo" class="footer-logo">
+        <div class="social-icons">
+            <a href="https://www.instagram.com/fotmresmi/" target="_blank" aria-label="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+            <a href="https://www.linkedin.com/company/fotm-subu" target="_blank" aria-label="LinkedIn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+            </a>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=futureofthemanufacturing@gmail.com" target="_blank" aria-label="E-posta">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </a>
+        </div>
+        <p>&copy; 2026 FOT-M (Future of the Manufacturing). Tüm hakları saklıdır.<br>
+        Sakarya Uygulamalı Bilimler Üniversitesi Öğrenci Topluluğu</p>
     </footer>
 
     <script>
-        // --- SUPABASE BAĞLANTISI ---
-        const S_URL = "https://tzdpljzkzvejdaydcwwi.supabase.co/rest/v1/duyurular";
-        const S_KEY = "BURAYA_ANON_KEY_GELECEK"; 
-
-        async function haberleriCek() {
-            try {
-                const res = await fetch(`${S_URL}?select=*&order=id.desc`, {
-                    headers: { "apikey": S_KEY, "Authorization": `Bearer ${S_KEY}` }
-                });
-                const duyurular = await res.json();
-                
-                const grid = document.getElementById('blogGrid');
-                const section = document.getElementById('blog');
-
-                if (duyurular && duyurular.length > 0) {
-                    section.style.display = 'block';
-                    grid.innerHTML = '';
-                    duyurular.forEach(d => {
-                        grid.innerHTML += `
-                            <article class="blog-card">
-                                ${d.gorsel ? `<div class="blog-img" style="background-image: url('${d.gorsel}')"></div>` : '<div class="blog-img"></div>'}
-                                <div class="blog-content">
-                                    <span class="blog-tag">${d.etiket || 'Genel'}</span>
-                                    <h3 style="margin-bottom:12px;">${d.baslik}</h3>
-                                    <p style="font-size:0.9rem; color:#a1a1aa;">${d.metin}</p>
-                                </div>
-                            </article>`;
-                    });
-                }
-            } catch (e) { console.log("Haberler yüklenemedi."); }
-        }
-
-        window.onload = haberleriCek;
-
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
-            nav.classList.toggle('scrolled', window.scrollY > 50);
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+
+        // PYTHON İLE HABERLEŞME VE AKILLI GİZLEME SİSTEMİ
+        document.addEventListener('DOMContentLoaded', () => {
+            const blogSection = document.getElementById('blog');
+            const blogGrid = document.querySelector('.blog-grid');
+
+            blogSection.style.display = 'none';
+
+            fetch('http://127.0.0.1:5000/api/duyurular')
+                .then(response => response.json())
+                .then(duyurular => {
+                    if (duyurular && duyurular.length > 0) {
+                        blogSection.style.display = 'block';
+                        blogGrid.innerHTML = ''; 
+                        
+                        duyurular.forEach(duyuru => {
+                            const gorselHtml = duyuru.gorsel 
+                                ? `<div class="blog-img" style="background-image: url('${duyuru.gorsel}'); background-size: cover; background-position: center;"></div>`
+                                : `<div class="blog-img"></div>`;
+
+                            const kartHTML = `
+                                <article class="blog-card fade-in visible">
+                                    ${gorselHtml}
+                                    <div class="blog-content">
+                                        <span class="blog-tag">${duyuru.etiket}</span>
+                                        <h3>${duyuru.baslik}</h3>
+                                        <p>${duyuru.metin}</p>
+                                    </div>
+                                </article>
+                            `;
+                            blogGrid.innerHTML += kartHTML;
+                        });
+                    }
+                })
+                .catch(hata => console.log("Sunucuya bağlanılamadı, bölüm gizli kalacak."));
         });
     </script>
 </body>
