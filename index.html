@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
     <style>
+        /* TASARIM VE DEĞİŞKENLER */
         :root {
             --bg-color: #030303;
             --bg-secondary: #0a0a0a;
@@ -46,6 +47,7 @@
             pointer-events: none;
         }
 
+        /* NAVBAR STİLLERİ */
         nav {
             position: fixed;
             top: 0;
@@ -138,6 +140,7 @@
             transition: stroke 0.3s;
         }
 
+        /* HERO BÖLÜMÜ */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -145,7 +148,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 60px 20px 60px 20px; 
+            padding: 60px 20px; 
             position: relative;
         }
 
@@ -225,6 +228,7 @@
             background-color: var(--accent-dim);
         }
 
+        /* İÇERİK BÖLÜMLERİ */
         .section-wrapper {
             padding: 120px 5%;
         }
@@ -326,10 +330,6 @@
             transition: opacity 0.3s;
         }
 
-        .card:hover::before {
-            opacity: 1;
-        }
-
         .card.visible {
             opacity: 1;
             transform: translateY(0);
@@ -341,18 +341,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            font-weight: 300;
-        }
-
+        /* HABER / BLOG KARTLARI */
         .blog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -382,14 +371,6 @@
             background-size: cover;
             background-position: center;
         }
-        
-        .blog-img::after {
-            content: '';
-            color: #333;
-            font-weight: 800;
-            font-size: 1.5rem;
-            letter-spacing: 5px;
-        }
 
         .blog-content {
             padding: 30px;
@@ -406,17 +387,6 @@
             margin-bottom: 15px;
             display: inline-block;
             border: 1px solid var(--border-color);
-        }
-
-        .blog-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-
-        .blog-card p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 20px;
         }
 
         footer {
@@ -467,12 +437,6 @@
             }
         }
 
-        @media (max-width: 992px) {
-            .about-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -490,12 +454,6 @@
             }
             nav.scrolled .logo-container img {
                 height: 60px;
-            }
-            nav {
-                padding: 15px 5%;
-            }
-            .join-btn-nav {
-                display: none;
             }
         }
     </style>
@@ -605,21 +563,17 @@
     <footer>
         <img src="logo/altlogoresim.png" alt="SUBÜ ve FOT-M Logo" class="footer-logo">
         <div class="social-icons">
-            <a href="https://instagram.com/_u/fotmresmi/" target="_blank">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-            </a>
-            <a href="https://www.linkedin.com/company/fotm-subu" target="_blank" aria-label="LinkedIn">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-            </a>
-            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=futureofthemanufacturing@gmail.com" target="_blank" aria-label="E-posta">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-            </a>
+            <a href="https://www.instagram.com/fotmresmi/" target="_blank">Instagram</a>
+            <a href="https://www.linkedin.com/company/fotm-subu" target="_blank">LinkedIn</a>
         </div>
         <p>&copy; 2026 FOT-M (Future of the Manufacturing). Tüm hakları saklıdır.<br>
         Sakarya Uygulamalı Bilimler Üniversitesi Öğrenci Topluluğu</p>
     </footer>
 
     <script>
+        /* TÜM FONKSİYONLAR TEK BİR SCRIPT ETİKETİ İÇİNDE */
+        
+        // 1. Navbar Kaydırma Efekti
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             if (window.scrollY > 50) {
@@ -629,6 +583,7 @@
             }
         });
 
+        // 2. Fade-in Animasyonları
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -639,10 +594,12 @@
 
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
+        // 3. Supabase Haber Çekme Sistemi
         document.addEventListener('DOMContentLoaded', async () => {
             const blogSection = document.getElementById('blog');
             const blogGrid = document.getElementById('blogGrid');
             
+            /* ÖNEMLİ: Supabase panelinden tablonun adını "duyurular" yapmayı unutma! */
             const S_URL = "https://tzdpljzkzvejdaydcwwi.supabase.co/rest/v1/duyurular";
             const S_KEY = "sb_publishable_Drt7V0pP7gYZxBnQF1zHUg_rUfql8N2408c"; 
 
@@ -655,8 +612,12 @@
                 if (duyurular && duyurular.length > 0) {
                     blogSection.style.display = 'block';
                     blogGrid.innerHTML = ''; 
+                    
                     duyurular.forEach(duyuru => {
-                        const img = duyuru.gorsel ? `<div class="blog-img" style="background-image: url('${duyuru.gorsel}')"></div>` : `<div class="blog-img"></div>`;
+                        const img = duyuru.gorsel 
+                            ? `<div class="blog-img" style="background-image: url('${duyuru.gorsel}')"></div>`
+                            : `<div class="blog-img"></div>`;
+
                         blogGrid.innerHTML += `
                             <article class="blog-card fade-in visible">
                                 ${img}
@@ -668,7 +629,9 @@
                             </article>`;
                     });
                 }
-            } catch (err) { console.error("Haberler çekilemedi."); }
+            } catch (err) {
+                console.error("Haber çekme hatası:", err);
+            }
         });
     </script>
 </body>
