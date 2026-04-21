@@ -619,47 +619,71 @@
         Sakarya Uygulamalı Bilimler Üniversitesi Öğrenci Topluluğu</p>
     </footer>
 
-   document.addEventListener('DOMContentLoaded', () => {
-    const blogSection = document.getElementById('blog');
-    const blogGrid = document.querySelector('.blog-grid');
-    blogSection.style.display = 'none';
+ <script>
+        // 1. Navbar Kaydırma Efekti (Senin orijinal kodun)
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
 
-    // SUPABASE BİLGİLERİN
-    const S_URL = "https://tzdpljzkzvejdaydcwwi.supabase.co/rest/v1/duyurular";
-    const S_KEY = "sb_publishable_Drt7V0pP7gYZxBnQF1zHUg_rUfql8N2408c"; 
-
-    fetch(`${S_URL}?select=*&order=id.desc`, {
-        headers: { "apikey": S_KEY, "Authorization": `Bearer ${S_KEY}` }
-    })
-    .then(res => res.json())
-    .then(duyurular => {
-        if (duyurular && duyurular.length > 0) {
-            blogSection.style.display = 'block';
-            blogGrid.innerHTML = ''; 
-            
-            duyurular.forEach(duyuru => {
-                const gorselHtml = duyuru.gorsel 
-                    ? `<div class="blog-img" style="background-image: url('${duyuru.gorsel}'); background-size: cover; background-position: center;"></div>`
-                    : `<div class="blog-img"></div>`;
-
-                blogGrid.innerHTML += `
-                    <article class="blog-card fade-in visible">
-                        ${gorselHtml}
-                        <div class="blog-content">
-                            <span class="blog-tag">${duyuru.etiket}</span>
-                            <h3>${duyuru.baslik}</h3>
-                            <p>${duyuru.metin}</p>
-                        </div>
-                    </article>
-                `;
+        // 2. Animasyonlar (Fade-in efektlerin)
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
             });
-        }
-    })
-    .catch(err => console.log("Hata:", err));
-});
+        }, observerOptions);
 
-// Senin Navbar Scroll Efektin
-window.addEventListener('scroll', () => {
-    const nav = document.getElementById('navbar');
-    nav.classList.toggle('scrolled', window.scrollY > 50);
-});
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+
+        // 3. Supabase Haber Çekme Sistemi (Senin anahtarlarınla güncel)
+        document.addEventListener('DOMContentLoaded', () => {
+            const blogSection = document.getElementById('blog');
+            const blogGrid = document.querySelector('.blog-grid');
+            
+            // Eğer veri yoksa bölümü başta gizle
+            blogSection.style.display = 'none';
+
+            const S_URL = "https://tzdpljzkzvejdaydcwwi.supabase.co/rest/v1/duyurular";
+            const S_KEY = "sb_publishable_Drt7V0pP7gYZxBnQF1zHUg_rUfql8N2408c"; 
+
+            fetch(`${S_URL}?select=*&order=id.desc`, {
+                headers: { "apikey": S_KEY, "Authorization": `Bearer ${S_KEY}` }
+            })
+            .then(res => res.json())
+            .then(duyurular => {
+                if (duyurular && duyurular.length > 0) {
+                    blogSection.style.display = 'block';
+                    blogGrid.innerHTML = ''; 
+                    
+                    duyurular.forEach(duyuru => {
+                        const gorselHtml = duyuru.gorsel 
+                            ? `<div class="blog-img" style="background-image: url('${duyuru.gorsel}'); background-size: cover; background-position: center;"></div>`
+                            : `<div class="blog-img"></div>`;
+
+                        // Senin tasarladığın kart yapısı
+                        blogGrid.innerHTML += `
+                            <article class="blog-card fade-in visible">
+                                ${gorselHtml}
+                                <div class="blog-content">
+                                    <span class="blog-tag">${duyuru.etiket}</span>
+                                    <h3>${duyuru.baslik}</h3>
+                                    <p>${duyuru.metin}</p>
+                                </div>
+                            </article>
+                        `;
+                    });
+                }
+            })
+            .catch(err => console.log("Veri çekme hatası:", err));
+        });
+    </script>
