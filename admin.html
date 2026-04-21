@@ -3,40 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>FOT-M | Dashboard</title>
+    <script>
+        const girisSifresi = prompt("Yönetici Şifresini Giriniz:");
+        if(girisSifresi !== "FOTM2026") {
+            document.write("<body style='background:#050505; color:white; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;'><h2>Erişim Engellendi</h2></body>");
+            window.stop();
+        }
+    </script>
     <style>
         body { background: #050505; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; display: flex; height: 100vh; }
-        
-        /* Sol Menü - Form Alanı */
         .sidebar { width: 400px; background: #111; padding: 40px; border-right: 1px solid #222; display: flex; flex-direction: column; overflow-y: auto; }
         .sidebar h2 { margin-top: 0; color: #fff; font-size: 24px; letter-spacing: 1px; margin-bottom: 5px; }
         .status-text { color: #a1a1aa; font-size: 13px; margin-bottom: 30px; display: block; }
-        
         label { font-size: 13px; color: #a1a1aa; margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 1px; }
         input[type="text"], textarea { width: 100%; padding: 12px; margin-bottom: 20px; background: #0a0a0a; border: 1px solid #333; color: white; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
         input[type="text"]:focus, textarea:focus { border-color: #666; outline: none; }
-        
         input[type="file"] { width: 100%; padding: 10px; margin-bottom: 30px; background: #0a0a0a; border: 1px dashed #444; color: #a1a1aa; border-radius: 6px; cursor: pointer; }
-        
         button.btn-submit { width: 100%; padding: 15px; background: #fff; color: #000; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; letter-spacing: 1px; }
         button.btn-submit:hover { background: #ccc; }
         button.btn-cancel { width: 100%; padding: 15px; background: transparent; color: #fff; border: 1px solid #444; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; display: none; }
         button.btn-cancel:hover { border-color: #fff; }
-
-        /* Sağ Menü - İçerik Listesi */
         .content { flex: 1; padding: 40px; overflow-y: auto; background: #0a0a0a; }
         .content h3 { margin-top: 0; font-size: 20px; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 30px; }
-        
         .haber-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .haber-card { background: #111; border: 1px solid #222; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
         .haber-card h4 { margin: 0 0 10px 0; font-size: 16px; }
         .haber-card span.tag { background: #222; padding: 3px 8px; border-radius: 4px; font-size: 11px; color: #a1a1aa; margin-bottom: 10px; display: inline-block; }
-        
         .action-buttons { display: flex; gap: 10px; margin-top: 20px; }
         .btn-edit { flex: 1; padding: 8px; background: #222; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .btn-edit:hover { background: #333; }
         .btn-delete { flex: 1; padding: 8px; background: #4a0000; color: #fff; border: 1px solid #6a0000; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .btn-delete:hover { background: #800000; }
-        
         .gorsel-onizleme { width: 100%; height: 120px; background-size: cover; background-position: center; border-radius: 4px; margin-bottom: 15px; background-color: #050505; }
     </style>
 </head>
@@ -66,79 +63,88 @@
 
     <div class="content">
         <h3>Yayındaki İçerikler</h3>
-        <div class="haber-grid" id="duyuruListesi">
-            </div>
+        <div class="haber-grid" id="duyuruListesi"></div>
     </div>
 
     <script>
-        const API_URL = 'http://127.0.0.1:5000/api';
-        let tamVeriListesi = []; // Düzenleme için verileri hafızada tutarız
+        const S_URL = "https://tzdpljzkzvejdaydcwwi.supabase.co/rest/v1/duyurular";
+        const S_KEY = "BURAYA_SUPABASE_ANON_KEY_GELECEK"; 
+
+        const headers = { 
+            "apikey": S_KEY, 
+            "Authorization": `Bearer ${S_KEY}`, 
+            "Content-Type": "application/json",
+            "Prefer": "return=representation"
+        };
+
+        let tamVeriListesi = []; 
 
         window.onload = duyurulariYukle;
 
-        function duyurulariYukle() {
-            fetch(`${API_URL}/duyurular`)
-                .then(res => res.json())
-                .then(data => {
-                    tamVeriListesi = data;
-                    const listeDiv = document.getElementById('duyuruListesi');
-                    listeDiv.innerHTML = '';
-                    
-                    if(data.length === 0) {
-                        listeDiv.innerHTML = '<p style="color:#666;">Henüz sistemde yayında olan bir haber yok.</p>';
-                        return;
-                    }
-
-                    data.forEach(d => {
-                        const gorselDiv = d.gorsel ? `<div class="gorsel-onizleme" style="background-image: url('${d.gorsel}')"></div>` : '';
-                        
-                        listeDiv.innerHTML += `
-                            <div class="haber-card">
-                                <div>
-                                    ${gorselDiv}
-                                    <span class="tag">${d.etiket}</span>
-                                    <h4>${d.baslik}</h4>
-                                </div>
-                                <div class="action-buttons">
-                                    <button class="btn-edit" onclick="duzenleModunaGec(${d.id})">DÜZENLE</button>
-                                    <button class="btn-delete" onclick="duyuruSil(${d.id})">SİL</button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                });
-        }
-
-        // Forma URL yerine dosya (File) gönderdiğimiz için FormData kullanıyoruz
-        function formuGonder() {
-            const id = document.getElementById('duzenlenenId').value;
-            const formData = new FormData();
+        async function duyurulariYukle() {
+            const res = await fetch(`${S_URL}?select=*&order=id.desc`, { headers });
+            const data = await res.json();
             
-            formData.append('etiket', document.getElementById('etiket').value);
-            formData.append('baslik', document.getElementById('baslik').value);
-            formData.append('metin', document.getElementById('metin').value);
+            tamVeriListesi = data;
+            const listeDiv = document.getElementById('duyuruListesi');
+            listeDiv.innerHTML = '';
             
-            const dosyaInput = document.getElementById('gorsel');
-            if(dosyaInput.files.length > 0) {
-                formData.append('gorsel', dosyaInput.files[0]);
+            if(data.length === 0) {
+                listeDiv.innerHTML = '<p style="color:#666;">Henüz sistemde yayında olan bir haber yok.</p>';
+                return;
             }
 
-            // ID doluysa güncelleme, boşsa yeni ekleme kapısına git
-            const url = id ? `${API_URL}/duyuru-duzenle/${id}` : `${API_URL}/duyuru-ekle`;
-
-            fetch(url, {
-                method: 'POST', // İkisi de POST ile çalışıyor
-                body: formData // JSON değil, FormData gönderiyoruz
-            })
-            .then(res => res.json())
-            .then(cevap => {
-                alert(cevap.mesaj);
-                iptalEt(); // Formu sıfırla
-                duyurulariYukle(); // Listeyi güncelle
+            data.forEach(d => {
+                const gorselDiv = d.gorsel ? `<div class="gorsel-onizleme" style="background-image: url('${d.gorsel}')"></div>` : '';
+                
+                listeDiv.innerHTML += `
+                    <div class="haber-card">
+                        <div>
+                            ${gorselDiv}
+                            <span class="tag">${d.etiket}</span>
+                            <h4>${d.baslik}</h4>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn-edit" onclick="duzenleModunaGec(${d.id})">DÜZENLE</button>
+                            <button class="btn-delete" onclick="duyuruSil(${d.id})">SİL</button>
+                        </div>
+                    </div>
+                `;
             });
         }
 
-        // Haber Kartındaki "DÜZENLE" butonuna basılınca çalışır
+        async function formuGonder() {
+            const id = document.getElementById('duzenlenenId').value;
+            const dosyaInput = document.getElementById('gorsel');
+            let gorselVerisi = "";
+
+            document.getElementById('submitBtn').innerText = "YÜKLENİYOR...";
+
+            if (id && dosyaInput.files.length === 0) {
+                const mevcutHaber = tamVeriListesi.find(x => x.id == parseInt(id));
+                if (mevcutHaber) gorselVerisi = mevcutHaber.gorsel;
+            } else if (dosyaInput.files.length > 0) {
+                const reader = new FileReader();
+                gorselVerisi = await new Promise(r => { reader.onload=()=>r(reader.result); reader.readAsDataURL(dosyaInput.files[0]); });
+            }
+
+            const gonderilecekVeri = {
+                etiket: document.getElementById('etiket').value,
+                baslik: document.getElementById('baslik').value,
+                metin: document.getElementById('metin').value,
+                gorsel: gorselVerisi
+            };
+
+            const url = id ? `${S_URL}?id=eq.${id}` : S_URL;
+            const method = id ? 'PATCH' : 'POST';
+
+            await fetch(url, { method: method, headers: headers, body: JSON.stringify(gonderilecekVeri) });
+            
+            alert(id ? "Duyuru başarıyla güncellendi!" : "Duyuru jilet gibi eklendi!");
+            iptalEt(); 
+            duyurulariYukle(); 
+        }
+
         function duzenleModunaGec(id) {
             const haber = tamVeriListesi.find(d => d.id === id);
             if(haber) {
@@ -146,7 +152,7 @@
                 document.getElementById('etiket').value = haber.etiket;
                 document.getElementById('baslik').value = haber.baslik;
                 document.getElementById('metin').value = haber.metin;
-                document.getElementById('gorsel').value = ""; // Güvenlik gereği dosya seçicisi boş bırakılır
+                document.getElementById('gorsel').value = ""; 
                 
                 document.getElementById('form-title').innerText = "Medyayı Düzenle";
                 document.getElementById('form-status').innerText = `ID ${haber.id} güncelleniyor. Yeni görsel seçmezseniz eski görsel korunur.`;
@@ -155,7 +161,6 @@
             }
         }
 
-        // Düzenlemekten vazgeçildiğinde veya işlem bittiğinde formu sıfırlar
         function iptalEt() {
             document.getElementById('duzenlenenId').value = "";
             document.getElementById('etiket').value = "";
@@ -169,10 +174,10 @@
             document.getElementById('cancelBtn').style.display = "none";
         }
 
-        function duyuruSil(id) {
+        async function duyuruSil(id) {
             if(confirm('Bu duyuruyu silmek istediğine emin misin?')) {
-                fetch(`${API_URL}/duyuru-sil/${id}`, { method: 'DELETE' })
-                .then(() => duyurulariYukle());
+                await fetch(`${S_URL}?id=eq.${id}`, { method: 'DELETE', headers: headers });
+                duyurulariYukle();
             }
         }
     </script>
