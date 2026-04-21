@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>FOT-M | Admin Dashboard</title>
     <style>
-        /* SENİN ORİJİNAL TASARIMIN */
         body { background: #050505; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0; display: flex; height: 100vh; }
         .sidebar { width: 400px; background: #111; padding: 40px; border-right: 1px solid #222; display: flex; flex-direction: column; overflow-y: auto; }
         .sidebar h2 { margin-top: 0; font-size: 24px; margin-bottom: 5px; }
@@ -18,46 +17,34 @@
         .haber-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .haber-card { background: #111; border: 1px solid #222; border-radius: 8px; padding: 20px; }
         .gorsel-onizleme { width: 100%; height: 120px; background-size: cover; background-position: center; border-radius: 4px; margin-bottom: 15px; background-color: #050505; }
-        .action-buttons { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-delete { flex: 1; padding: 8px; background: #4a0000; color: #fff; border: 1px solid #6a0000; border-radius: 4px; cursor: pointer; font-size: 11px; }
+        .btn-delete { width: 100%; padding: 8px; background: #4a0000; color: #fff; border: 1px solid #6a0000; border-radius: 4px; cursor: pointer; font-size: 11px; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h2>Medya Ekle</h2>
         <span class="status-text">FOT-M Haber Yönetim Paneli</span>
-        
         <label>Etiket (Kategori)</label>
         <input type="text" id="etiket" placeholder="Örn: DUYURU">
-        
         <label>Haber Başlığı</label>
         <input type="text" id="baslik" placeholder="Başlık yazın...">
-        
         <label>İçerik Metni</label>
         <textarea id="metin" rows="5" placeholder="Haber metnini girin..."></textarea>
-        
         <label>Görsel Yükle</label>
         <input type="file" id="gorsel" accept="image/*">
-        
         <button class="btn-submit" id="submitBtn" onclick="formuGonder()">YAYINLA</button>
     </div>
-
     <div class="content">
         <h3>Yayındaki İçerikler</h3>
         <div class="haber-grid" id="duyuruListesi"></div>
     </div>
 
     <script>
-        // Şifre: FOTM2026
         const giris = prompt("Yönetici Şifresi:");
-        if(giris !== "FOTM2026") {
-            document.write("<h2>Erişim Reddedildi</h2>");
-            window.stop();
-        }
+        if(giris !== "FOTM2026") { document.write("<h2>Erişim Reddedildi</h2>"); window.stop(); }
 
-        // SUPABASE BAĞLANTISI (Doğru Tablo: duyurular)
         const S_URL = "https://tzdpljzkzvejdaydcwwi.supabase.co/rest/v1/duyurular";
-        const S_KEY = "sb_publishable_Drt7V0pP7gYZxBnQF1zHUg_rUfql8N2408c"; 
+        const S_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6ZHBsanprenZlamRheWRjd3dpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDc5MjEsImV4cCI6MjA5MjI4MzkyMX0.BkSThURX33Spc2Ir5CjLpGZeueJ0pN-ZuznARP64g4s"; 
 
         const headers = { 
             "apikey": S_KEY, 
@@ -69,28 +56,22 @@
         window.onload = duyurulariYukle;
 
         async function duyurulariYukle() {
-            const res = await fetch(`${S_URL}?select=*&order=id.desc`, { headers });
-            const data = await res.json();
-            const listeDiv = document.getElementById('duyuruListesi');
-            listeDiv.innerHTML = data.length ? '' : '<p style="color:#666;">Henüz yayınlanmış bir haber yok.</p>';
-
-            data.forEach(d => {
-                const img = d.gorsel ? `<div class="gorsel-onizleme" style="background-image: url('${d.gorsel}')"></div>` : '';
-                listeDiv.innerHTML += `
-                    <div class="haber-card">
-                        ${img}
-                        <span style="font-size:10px; color:#aaa; text-transform:uppercase;">${d.etiket}</span>
-                        <h4 style="margin: 5px 0;">${d.baslik}</h4>
-                        <button class="btn-delete" onclick="duyuruSil(${d.id})">SİL</button>
-                    </div>`;
-            });
+            try {
+                const res = await fetch(`${S_URL}?select=*&order=id.desc`, { headers });
+                const data = await res.json();
+                const listeDiv = document.getElementById('duyuruListesi');
+                listeDiv.innerHTML = data.length ? '' : '<p style="color:#666;">Henüz yayınlanmış bir haber yok.</p>';
+                data.forEach(d => {
+                    const img = d.gorsel ? `<div class="gorsel-onizleme" style="background-image: url('${d.gorsel}')"></div>` : '';
+                    listeDiv.innerHTML += `<div class="haber-card">${img}<span style="font-size:10px; color:#aaa; text-transform:uppercase;">${d.etiket}</span><h4 style="margin: 5px 0;">${d.baslik}</h4><button class="btn-delete" onclick="duyuruSil(${d.id})">SİL</button></div>`;
+                });
+            } catch (e) { console.error("Hata:", e); }
         }
 
         async function formuGonder() {
             const submitBtn = document.getElementById('submitBtn');
             const file = document.getElementById('gorsel').files[0];
             let gorselVerisi = "";
-
             submitBtn.innerText = "YAYINLANIYOR...";
             submitBtn.disabled = true;
 
@@ -106,27 +87,13 @@
                 gorsel: gorselVerisi
             };
 
-            const res = await fetch(S_URL, { 
-                method: 'POST', 
-                headers: headers, 
-                body: JSON.stringify(veri) 
-            });
-
-            if(res.ok) {
-                alert("Haber başarıyla yayınlandı!");
-                location.reload();
-            } else {
-                alert("Bir hata oluştu. Konsolu kontrol et.");
-                submitBtn.innerText = "YAYINLA";
-                submitBtn.disabled = false;
-            }
+            const res = await fetch(S_URL, { method: 'POST', headers, body: JSON.stringify(veri) });
+            if(res.ok) { alert("Haber başarıyla yayınlandı!"); location.reload(); } 
+            else { const err = await res.json(); alert("Hata: " + err.message); submitBtn.innerText = "YAYINLA"; submitBtn.disabled = false; }
         }
 
         async function duyuruSil(id) {
-            if(confirm('Bu haberi silmek istediğine emin misin?')) {
-                await fetch(`${S_URL}?id=eq.${id}`, { method: 'DELETE', headers });
-                duyurulariYukle();
-            }
+            if(confirm('Silinsin mi?')) { await fetch(`${S_URL}?id=eq.${id}`, { method: 'DELETE', headers }); duyurulariYukle(); }
         }
     </script>
 </body>
