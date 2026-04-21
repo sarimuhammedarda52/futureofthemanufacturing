@@ -131,6 +131,7 @@
 
         .nav-icons a {
             color: var(--text-muted);
+            cursor: pointer;
         }
 
         .nav-icons a:hover {
@@ -250,6 +251,9 @@
         .section-header {
             text-align: center;
             margin-bottom: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .section-title {
@@ -370,7 +374,6 @@
             padding: 20px 0;
         }
 
-        /* Çok haber varken aktifleşen Slider modunun CSS'i */
         .blog-grid.slider-mode {
             display: flex;
             overflow-x: auto;
@@ -440,7 +443,61 @@
             margin-bottom: 20px;
         }
 
-        /* --- FOOTER TASARIMI (TEMİZLENDİ) --- */
+        /* YENİ EKLENENLER: SLIDER OKLARI VE TOAST BİLDİRİMİ */
+        .slider-arrows {
+            display: none;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .slider-arrows button {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .slider-arrows button:hover {
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        .slider-arrows button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: var(--bg-color);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* --- FOOTER TASARIMI --- */
         footer {
             padding: 60px 5%;
             text-align: center;
@@ -500,6 +557,8 @@
 </head>
 <body>
 
+    <div id="toastMsg" class="toast">E-posta adresi kopyalandı!</div>
+
     <div class="bg-glow"></div>
 
     <nav id="navbar">
@@ -518,7 +577,7 @@
                 <a href="https://www.linkedin.com/company/fotm-subu" target="_blank" aria-label="LinkedIn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
                 </a>
-                <a href="mailto:futureofthemanufacturing@gmail.com" aria-label="E-posta">
+                <a onclick="mailiKopyala(event)" aria-label="E-posta" title="Adresi Kopyala">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                 </a>
             </div>
@@ -594,10 +653,20 @@
             <div class="section-header fade-in">
                 <h2 class="section-title">GÜNCEL & MEDYA</h2>
                 <h3 class="section-heading">Son Gelişmeler</h3>
+                
                 <p id="scrollHint" style="color:var(--text-muted); font-size: 11px; margin-top: 10px; display: none;">← Sağa sola kaydırın →</p>
+                <div class="slider-arrows" id="sliderArrows">
+                    <button onclick="haberiKaydir(-1)" aria-label="Geri">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <button onclick="haberiKaydir(1)" aria-label="İleri">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                </div>
+
             </div>
             <div class="blog-grid" id="blogGrid">
-                </div>
+            </div>
         </div>
     </section>
 
@@ -610,6 +679,31 @@
     </footer>
 
     <script>
+        // MAİL KOPYALAMA FONKSİYONU
+        function mailiKopyala(event) {
+            event.preventDefault();
+            const mail = "futureofthemanufacturing@gmail.com";
+            
+            navigator.clipboard.writeText(mail).then(() => {
+                const toast = document.getElementById('toastMsg');
+                toast.classList.add('show');
+                
+                // 3 saniye sonra bildirimi gizle
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }).catch(err => {
+                console.error('Kopyalama hatası:', err);
+            });
+        }
+
+        // HABER SLIDER KAYDIRMA FONKSİYONU
+        function haberiKaydir(yon) {
+            const grid = document.getElementById('blogGrid');
+            const kaydirmaMiktari = 375; // Kart genişliği (350px) + Gap (25px)
+            grid.scrollBy({ left: yon * kaydirmaMiktari, behavior: 'smooth' });
+        }
+
         // NAVBAR KAYDIRMA EFEKTİ
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
@@ -636,8 +730,8 @@
             const blogSection = document.getElementById('blog');
             const blogGrid = document.getElementById('blogGrid');
             const scrollHint = document.getElementById('scrollHint');
+            const sliderArrows = document.getElementById('sliderArrows');
             
-            // JİLET GİBİ URL VE ANAHTAR
             const S_URL = "https://tzdpljzkzvejdaydcwwi.supabase.co/rest/v1/duyurular";
             const S_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6ZHBsanprenZlamRheWRjd3dpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDc5MjEsImV4cCI6MjA5MjI4MzkyMX0.BkSThURX33Spc2Ir5CjLpGZeueJ0pN-ZuznARP64g4s"; 
 
@@ -654,7 +748,13 @@
                     // AKILLI KONTROL: 1'den fazla haber varsa Slider moduna geç
                     if (duyurular.length > 1) {
                         blogGrid.classList.add('slider-mode');
-                        scrollHint.style.display = 'block';
+                        
+                        // Ekran boyutuna göre okları veya "kaydırın" yazısını göster
+                        if (window.innerWidth <= 768) {
+                            scrollHint.style.display = 'block';
+                        } else {
+                            sliderArrows.style.display = 'flex';
+                        }
                     }
                     
                     duyurular.forEach(duyuru => {
