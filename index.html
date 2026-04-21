@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FOT-M | Üretimin Geleceği</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* */
+        /* TÜM CSS DEĞİŞKENLERİ VE ANA AYARLAR */
         :root {
             --bg-color: #030303;
             --bg-secondary: #0a0a0a;
@@ -35,6 +37,7 @@
             line-height: 1.6;
         }
 
+        /* ARKA PLAN GLOW EFEKTİ */
         .bg-glow {
             position: absolute;
             top: -10%;
@@ -47,6 +50,7 @@
             pointer-events: none;
         }
 
+        /* NAVBAR TASARIMI */
         nav {
             position: fixed;
             top: 0;
@@ -139,6 +143,7 @@
             transition: stroke 0.3s;
         }
 
+        /* HERO (GİRİŞ) BÖLÜMÜ */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -226,6 +231,7 @@
             background-color: var(--accent-dim);
         }
 
+        /* GENEL BÖLÜM STİLLERİ */
         .section-wrapper {
             padding: 120px 5%;
         }
@@ -261,6 +267,7 @@
             letter-spacing: -0.02em;
         }
 
+        /* HAKKIMIZDA BÖLÜMÜ */
         .about-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -300,6 +307,7 @@
             margin: 0;
         }
 
+        /* FAALİYET KARTLARI */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -354,22 +362,34 @@
             font-weight: 300;
         }
 
+        /* KAYDIRMALI HABER TASARIMI (Slider) */
         .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            display: flex;
+            overflow-x: auto;
+            gap: 25px;
+            padding: 20px 0 40px 0;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE */
+        }
+
+        .blog-grid::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
         }
 
         .blog-card {
-            background: transparent;
+            flex: 0 0 350px;
+            scroll-snap-align: start;
+            background: var(--surface-color);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
         }
 
         .blog-card:hover {
             border-color: #555;
+            transform: translateY(-5px);
         }
 
         .blog-img {
@@ -390,7 +410,7 @@
 
         .blog-tag {
             font-size: 0.75rem;
-            background: var(--surface-color);
+            background: var(--bg-color);
             padding: 4px 10px;
             border-radius: 100px;
             color: var(--text-muted);
@@ -401,6 +421,19 @@
             border: 1px solid var(--border-color);
         }
 
+        .blog-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .blog-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        /* FOOTER */
         footer {
             padding: 60px 5%;
             text-align: center;
@@ -410,6 +443,7 @@
             flex-direction: column;
             align-items: center;
             gap: 30px;
+            border-top: 1px solid var(--border-color);
         }
 
         .footer-logo {
@@ -432,6 +466,7 @@
             color: var(--accent);
         }
 
+        /* ANİMASYONLAR VE MOBİL UYUM */
         @keyframes fadeUp {
             to {
                 opacity: 1;
@@ -476,8 +511,8 @@
             nav {
                 padding: 15px 5%;
             }
-            .join-btn-nav {
-                display: none;
+            .blog-card {
+                flex: 0 0 280px;
             }
         }
     </style>
@@ -529,7 +564,6 @@
                     <h3 class="section-heading" style="margin-bottom: 20px;">Biz Kimiz?</h3>
                     <p>Kağıt üzerindeki formülleri üretim hattına, teorik fikirleri çalışan sistemlere dönüştüren dinamik bir teknoloji takımıyız.</p>
                     <p>Kariyer basamaklarını boş bir CV ile değil; FOT-M'de yazdığınız kodlar, ürettiğiniz cihazlar ve edindiğiniz gerçek sanayi deneyimiyle tırmanacaksınız. Sektör temsilcilerinin karşısına çıktığınızda, masaya koyduğunuz somut projeler ve teknik vizyonunuzla diğer tüm adayların her zaman bir adım önünde olacaksınız.</p>
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf7tYTZ3Wy6WZc64zi3DsCpmwAchU1Be7CKoMNG221JLivJig/viewform?usp=dialog" target="_blank" class="btn btn-primary" style="display: inline-block; margin-top: 20px;">Aramıza Katıl</a>
                 </div>
                 
                 <div class="about-missions fade-in">
@@ -579,8 +613,10 @@
             <div class="section-header fade-in">
                 <h2 class="section-title">GÜNCEL & MEDYA</h2>
                 <h3 class="section-heading">Son Gelişmeler ve Blog</h3>
+                <p style="color:var(--text-muted); font-size: 12px; margin-top: 10px;">← Sağa sola kaydırın →</p>
             </div>
-            <div class="blog-grid" id="blogGrid"></div>
+            <div class="blog-grid" id="blogGrid">
+                </div>
         </div>
     </section>
 
@@ -625,6 +661,7 @@
             const blogSection = document.getElementById('blog');
             const blogGrid = document.getElementById('blogGrid');
             
+            // JİLET GİBİ URL VE ANAHTAR
             const S_URL = "https://tzdpljzkzvejdaydcwwi.supabase.co/rest/v1/duyurular";
             const S_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6ZHBsanprenZlamRheWRjd3dpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDc5MjEsImV4cCI6MjA5MjI4MzkyMX0.BkSThURX33Spc2Ir5CjLpGZeueJ0pN-ZuznARP64g4s"; 
 
