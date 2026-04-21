@@ -605,7 +605,7 @@
     <footer>
         <img src="logo/altlogoresim.png" alt="SUBÜ ve FOT-M Logo" class="footer-logo">
         <div class="social-icons">
-            <a href="https://instagram.com/_u/fotmresmi/" target="_blank">Instagram</a>
+            <a href="https://instagram.com/_u/fotmresmi/" target="_blank">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
             <a href="https://www.linkedin.com/company/fotm-subu" target="_blank" aria-label="LinkedIn">
@@ -648,40 +648,44 @@
             observer.observe(element);
         });
 
-        // PYTHON İLE HABERLEŞME VE AKILLI GİZLEME SİSTEMİ
+        // SUPABASE İLE HABERLEŞME VE AKILLI GİZLEME SİSTEMİ
         document.addEventListener('DOMContentLoaded', () => {
             const blogSection = document.getElementById('blog');
             const blogGrid = document.querySelector('.blog-grid');
-
             blogSection.style.display = 'none';
 
-            fetch('http://127.0.0.1:5000/api/duyurular')
-                .then(response => response.json())
-                .then(duyurular => {
-                    if (duyurular && duyurular.length > 0) {
-                        blogSection.style.display = 'block';
-                        blogGrid.innerHTML = ''; 
-                        
-                        duyurular.forEach(duyuru => {
-                            const gorselHtml = duyuru.gorsel 
-                                ? `<div class="blog-img" style="background-image: url('${duyuru.gorsel}'); background-size: cover; background-position: center;"></div>`
-                                : `<div class="blog-img"></div>`;
+            const S_URL = "https://tzdpljzkzvejdaydcwwi.supabase.co/rest/v1/duyurular";
+            const S_KEY = "BURAYA_SUPABASE_ANON_KEY_GELECEK";
 
-                            const kartHTML = `
-                                <article class="blog-card fade-in visible">
-                                    ${gorselHtml}
-                                    <div class="blog-content">
-                                        <span class="blog-tag">${duyuru.etiket}</span>
-                                        <h3>${duyuru.baslik}</h3>
-                                        <p>${duyuru.metin}</p>
-                                    </div>
-                                </article>
-                            `;
-                            blogGrid.innerHTML += kartHTML;
-                        });
-                    }
-                })
-                .catch(hata => console.log("Sunucuya bağlanılamadı, bölüm gizli kalacak."));
+            fetch(`${S_URL}?select=*&order=id.desc`, {
+                headers: { "apikey": S_KEY, "Authorization": `Bearer ${S_KEY}` }
+            })
+            .then(response => response.json())
+            .then(duyurular => {
+                if (duyurular && duyurular.length > 0) {
+                    blogSection.style.display = 'block';
+                    blogGrid.innerHTML = ''; 
+                    
+                    duyurular.forEach(duyuru => {
+                        const gorselHtml = duyuru.gorsel 
+                            ? `<div class="blog-img" style="background-image: url('${duyuru.gorsel}'); background-size: cover; background-position: center;"></div>`
+                            : `<div class="blog-img"></div>`;
+
+                        const kartHTML = `
+                            <article class="blog-card fade-in visible">
+                                ${gorselHtml}
+                                <div class="blog-content">
+                                    <span class="blog-tag">${duyuru.etiket}</span>
+                                    <h3>${duyuru.baslik}</h3>
+                                    <p>${duyuru.metin}</p>
+                                </div>
+                            </article>
+                        `;
+                        blogGrid.innerHTML += kartHTML;
+                    });
+                }
+            })
+            .catch(hata => console.log("Sunucuya bağlanılamadı, bölüm gizli kalacak."));
         });
     </script>
 </body>
